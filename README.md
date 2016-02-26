@@ -1,3 +1,2 @@
 # xpchess
 
-mergetest successful
