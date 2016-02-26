@@ -1,3 +1,3 @@
 # xpchess
 
-test
+mergetest
