@@ -1,4 +1,4 @@
-# Šach - špecifikácia
+# Šach
 
 ### Metafora
 
