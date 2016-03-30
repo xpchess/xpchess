@@ -44,7 +44,7 @@ class game():
             ret += chr(c) + ' '
         return ret
     
-    def pohni(self,c1 = ("A",1),c2 = ("H",8)):
+    def pohni(self,c1 = ("A",1),c2 = ("H",8),self.field):
         c1 = (ord(c1[0])-ord("A"),8-c1[1])
         c2 = (ord(c2[0])-ord("A"),8-c2[1])
         if self.pole[c1[1]][c1[0]].pohni(c1,c2):
