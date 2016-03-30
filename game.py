@@ -13,6 +13,7 @@ class game():
         for i in range(8):
             self.field.append([None] * 8)
         self.set_up()
+        #sluzi na debug
         self.icons = {"White pawn":"♙","White rook":"♖","White knight":"♘",
                       "White bishop":"♗","White queen":"♕","White king":"♔",
                       "Black pawn":"♟","Black rook":"♜","Black knight":"♞",
