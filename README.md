@@ -20,9 +20,9 @@
 
 ### Úlohy
 #### 1. ITERÁCIA:
-- [ ] prázdny template aplikácia, základná kostra (4h - celý tím)
+- [x] prázdny template aplikácia, základná kostra (4h - celý tím)
 - [ ] testy pre dátovú štruktúru (2h - Majo a Dominik)
-- [ ] návrh a realizácia dátovej štruktúry a jej funkcií (8h) - Majo a Dominik)
+- [x] návrh a realizácia dátovej štruktúry a jej funkcií (8h) - Majo a Dominik)
 - [ ] testy pre pohyb figúrok (2h - Martin a Martina)
 - [ ] realizácia funkcie pre pohyb figúrok (6h - Martin a Martina)
 - [ ] realizácia funkcie na overovanie korektnosti figúrok (8h - Martin a Martina)
