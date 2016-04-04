@@ -48,12 +48,14 @@ class game():
     def pohni(self,c1 = ("A",1),c2 = ("H",8)):
         c1 = (ord(c1[0])-ord("A"),8-c1[1])
         c2 = (ord(c2[0])-ord("A"),8-c2[1])
-        if self.field[c1[1]][c1[0]].pohni(c1,c2,self.field):
-            self.field[c2[1]][c2[0]] = self.field[c1[1]][c1[0]]
-            self.field[c1[1]][c1[0]] = None
-            return True
-        else:
-            return False
+        if self.field[c1[1]][c1[0]] is not None:
+            if self.field[c1[1]][c1[0]].pohni(c1,c2,self.field):
+                self.field[c2[1]][c2[0]] = self.field[c1[1]][c1[0]]
+                self.field[c1[1]][c1[0]] = None
+                return True
+            else:
+                return False
+        return False
 
 
 g = game()
