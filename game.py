@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 import sys
 import os
 sys.path[0:0] = [os.path.join(sys.path[0], './pieces')]
@@ -7,18 +8,17 @@ com = ["from {} import {}".format(v,v) for v in p]
 for c in com:
     exec(c)
     
+
 class game():
     def __init__(self):
-        self.field = []
-        for i in range(8):
-            self.field.append([None] * 8)
+        self.field = [[None] * 8 for i in range(8)]
         self.set_up()
         #sluzi na debug
         self.icons = {"White pawn":"♙","White rook":"♖","White knight":"♘",
                       "White bishop":"♗","White queen":"♕","White king":"♔",
                       "Black pawn":"♟","Black rook":"♜","Black knight":"♞",
                       "Black bishop":"♝","Black queen":"♛","Black king":"♚",
-                      "None":" "}
+                      "None":"　"} # pozor, toto nie je obycajna medzera
         
     def set_up(self):
         self.field[0] = [rook("Black"),knight("Black"),bishop("Black"),queen("Black"),
@@ -28,7 +28,7 @@ class game():
         self.field[1] = [pawn("Black") for i in range(8)]
         self.field[6] = [pawn("White") for i in range(8)]
         for i in range(2,6):
-            self.field[i] = [None for i in range(8)]
+            self.field[i] = [None] * 8
             
     def __repr__(self):
         ret = ""
@@ -56,6 +56,7 @@ class game():
             else:
                 return False
         return False
+
 
 
 g = game()
