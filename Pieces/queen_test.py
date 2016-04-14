@@ -15,7 +15,26 @@ class queen_test(unittest.TestCase):
         self.assertEqual(str(y),"Black queen")
         
     def test_move(self):
-        pass
+        board = [[None] * 8 for i in range(8)]
+
+        board[3][3] = queen("Black")
+        testQueen = board[3][3]
+
+        self.assertEqual(True, testQueen.pohyb((3, 3), (3, 4), board))
+        self.assertEqual(True, testQueen.pohyb((3, 3), (3, 2), board))
+        self.assertEqual(True, testQueen.pohyb((3, 3), (5, 3), board))
+        self.assertEqual(True, testQueen.pohyb((3, 3), (2, 4), board))
+        self.assertEqual(True, testQueen.pohyb((3, 3), (2, 2), board))
+        self.assertEqual(True, testQueen.pohyb((3, 3), (2, 4), board))
+        self.assertEqual(True, testQueen.pohyb((3, 3), (5, 1), board))
+        self.assertEqual(True, testQueen.pohyb((3, 3), (5, 5), board))
+
+        self.assertEqual(False, testQueen.pohyb((3, 3), (0, 1), board))
+
+        board[4][4] = queen("Black")
+        self.assertEqual(True, testQueen.pohyb((3, 3), (4, 4), board))
+        self.assertEqual(False, testQueen.pohyb((3, 3), (5, 5), board))
+
 
 if __name__ == '__main__':
     unittest.main()

@@ -14,6 +14,14 @@ class game():
         self.field = [[None] * 8 for i in range(8)]
         self.set_up()
         #sluzi na debug
+
+        # pawn - pesiak
+        # rook - veza
+        # bishop - strelec
+        # knight - kon
+        # king - kral
+        # queen - kralovna
+
         self.icons = {"White pawn":"♙","White rook":"♖","White knight":"♘",
                       "White bishop":"♗","White queen":"♕","White king":"♔",
                       "Black pawn":"♟","Black rook":"♜","Black knight":"♞",
@@ -29,7 +37,7 @@ class game():
         self.field[6] = [pawn("White") for i in range(8)]
         for i in range(2,6):
             self.field[i] = [None] * 8
-            
+
     def __repr__(self):
         ret = ""
         f = self.field
@@ -45,11 +53,14 @@ class game():
             ret += chr(c) + ' '
         return ret
     
-    def pohni(self,c1 = ("A",1),c2 = ("H",8)):
-        c1 = (ord(c1[0])-ord("A"),8-c1[1])
-        c2 = (ord(c2[0])-ord("A"),8-c2[1])
+    def pohni(self, c1 = ("A",1), c2 = ("H",8)):
+        c1 = (ord(c1[0])-ord("A"), 8-c1[1])
+        c2 = (ord(c2[0])-ord("A"), 8-c2[1])
+
+        #TODO bug fix vyletenie z pola na indexy mimo 0 az 7, neni to ani v testoch, neviem preco
         if self.field[c1[1]][c1[0]] is not None:
-            if self.field[c1[1]][c1[0]].pohni(c1,c2,self.field):
+            print(c1, c2)
+            if self.field[c1[1]][c1[0]].pohyb(c1,c2,self.field):
                 self.field[c2[1]][c2[0]] = self.field[c1[1]][c1[0]]
                 self.field[c1[1]][c1[0]] = None
                 return True
