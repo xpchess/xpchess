@@ -24,10 +24,10 @@ class queen(piece):
 
         #pohyb po diagonale
         elif abs(fromX - toX) == abs(fromY - toY):
-            x_cor = list(range(toX +piece.vratKrok(toX, fromX), fromX, piece.vratKrok(toX, fromX)))
-            y_cor = list(range(toY + piece.vratKrok(toY, fromY), fromY, piece.vratKrok(toY, fromY)))
+            x_cor = list(range(toX, fromX, piece.vratKrok(toX, fromX)))
+            y_cor = list(range(toY, fromY, piece.vratKrok(toY, fromY)))
 
-            for x in range(0, len(x_cor)):
+            for x in range(1, len(x_cor)):
                 if field[y_cor[x]][x_cor[x]] is not None:
                     return False
             return True
