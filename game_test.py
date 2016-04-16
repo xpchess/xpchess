@@ -53,6 +53,5 @@ class game_test(unittest.TestCase):
                 self.assertNotEqual(g.field[y][x], -1)
 
 
-
 if __name__ == "__main__":
     unittest.main(verbosity=2)

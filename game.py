@@ -57,8 +57,8 @@ class game():
         c1 = (ord(c1[0])-ord("A"), 8-c1[1])
         c2 = (ord(c2[0])-ord("A"), 8-c2[1])
 
-        inBounds = c1[0] in range(0,8) and c1[1] in range(0,8) and c2[0] in range(0,8) and c2[1] in range(0,8)
-        if self.field[c1[1]][c1[0]] is not None and inBounds:
+        #TODO bug fix vyletenie z pola na indexy mimo 0 az 7, neni to ani v testoch, neviem preco
+        if self.field[c1[1]][c1[0]] is not None:
             if self.field[c1[1]][c1[0]].pohyb(c1,c2,self.field):
                 self.field[c2[1]][c2[0]] = self.field[c1[1]][c1[0]]
                 self.field[c1[1]][c1[0]] = None
@@ -70,6 +70,8 @@ class game():
 
 
 g = game()
+
+g.pohni(("C", 1), ("D", 3))
 print(g)
 
 
