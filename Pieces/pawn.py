@@ -17,7 +17,7 @@ class pawn(piece):
                         return False
                 return True
             #inak len o jedno
-            elif (toY - fromY) == 1 and fromX == toX and field[toX][toY] is None:
+            elif (toY - fromY) == 1 and fromX == toX and field[toY][toX] is None:
                 return True
             else:
                 return False
@@ -31,7 +31,7 @@ class pawn(piece):
                         return False
                 return True
             # inak len o jedno
-            elif (fromY - toY) == 1 and fromX == toX and field[toX][toY] is None:
+            elif (fromY - toY) == 1 and fromX == toX and field[toY][toX] is None:
                 return True
             else:
                 return False
