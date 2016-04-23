@@ -52,6 +52,9 @@ class frame:
         fromY = c1[1]
         toX = c2[0]
         toY = c2[1]
+        if self.ref[toY][toX] is not None:
+            self.c.delete(self.ref[toY][toX])
+            self.ref[toY][toX] = None
         self.c.move(self.ref[fromY][fromX],(toX-fromX)*100,(toY-fromY)*100)
         self.ref[toY][toX] = self.ref[fromY][fromX]
         self.ref[fromY][fromX] = None
