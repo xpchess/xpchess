@@ -74,10 +74,16 @@ class game():
 
     def g_pohni(self, c1, c2):
         c1,c2 = c1,c2
+        col1,col2 = self.field[c1[1]][c1[0]],self.field[c2[1]][c2[0]]
 
+        if col1 is not None:
+            col1 = str(col1).split(' ')[0]
+        if col2 is not None:
+            col2 = str(col2).split(' ')[0]
+        
         inBounds = c1[0] in range(0,8) and c1[1] in range(0,8) and c2[0] in range(0,8) and c2[1] in range(0,8)
         if self.field[c1[1]][c1[0]] is not None and inBounds:
-            if self.field[c1[1]][c1[0]].pohyb(c1,c2,self.field):
+            if self.field[c1[1]][c1[0]].pohyb(c1,c2,self.field) and col1 != col2:
                 self.field[c2[1]][c2[0]] = self.field[c1[1]][c1[0]]
                 self.field[c1[1]][c1[0]] = None
                 self.g.move(c1,c2)
