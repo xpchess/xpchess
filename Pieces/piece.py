@@ -4,6 +4,7 @@ class piece(object):
             self.color = col
         else:
             raise TypeError
+        self.move = False
     def __str__(self):
         typ = str(type(self)).split(".")[1][:-2]
         return "{} {}".format(self.color,typ)
@@ -19,3 +20,7 @@ class piece(object):
             return -1
     pass
 
+    def pohol_som_sa(self):
+        return self.move
+    def pohni_sa(self):
+        self.move = True

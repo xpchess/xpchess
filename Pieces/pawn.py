@@ -35,3 +35,24 @@ class pawn(piece):
                 return True
             else:
                 return False
+
+
+    def vyhadzujem(self, c1, c2, field):
+        fromX = c1[0]
+        fromY = c1[1]
+        toX = c2[0]
+        toY = c2[1]
+
+        # kontrola pre cierny
+        if self.color == "Black":
+            if (toY - fromY) == 1 and abs(fromX - toX) == 1:
+                return True
+            else:
+                return False
+
+        # kontrola pre biely
+        else:
+            if (toY - fromY) == -1 and abs(fromX - toX) == 1:
+                return True
+            else:
+                return False
