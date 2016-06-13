@@ -261,12 +261,14 @@ class game():
             com = "temp = {}('White')".format(p)
             exec(com)
             self.field[c[0]][c[1]] = temp
+            self.returning = None
         elif x == 9 and self.returning is not None and y in range(self.g.taken('b')):
             c = self.returning
             p = self.g.ret(c,'Black',y)
             com = "temp = {}('Black')".format(p)
             exec(com)
             self.field[c[0]][c[1]] = temp
+            self.returning = None
 
 
 
