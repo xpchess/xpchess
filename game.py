@@ -14,8 +14,9 @@ class game():
     def __init__(self):
         self.field = [[None] * 8 for i in range(8)]
         self.set_up()
-        self.g = frame(self.preloz())
+        self.g = frame(self.preloz(),self.ktoHra)
         self.ktoHra = "White"
+        self.returning = None
         #sluzi na debug
 
         # pawn - pesiak
@@ -92,14 +93,11 @@ class game():
         type2 = ""
 
         if fig1 is not None:
-            color1 = str(fig1).split(' ')[0]
+            temp = str(fig1).split(' ')
+            color1,type1 = temp[0],temp[1]
         if fig2 is not None:
-            color2 = str(fig2).split(' ')[0]
-
-        if fig1 is not None:
-            type1 = str(fig1).split(' ')[1]
-        if fig2 is not None:
-            type2 = str(fig2).split(' ')[1]
+            temp = str(fig2).split(' ')
+            color2,type2 = temp[0],temp[1]
 
         if color1 != self.ktoHra:
             return False
@@ -149,6 +147,9 @@ class game():
         return False
 
     def hyb_sa(self, c1, c2):
+        fig2 = self.field[c2[1]][c2[0]]
+        if fig2 is not None and not 'pawn' in str(fig2):
+            self.g.vyhod(str(fig2))
         self.field[c2[1]][c2[0]] = self.field[c1[1]][c1[0]]
         self.field[c2[1]][c2[0]].pohni_sa()
         self.field[c1[1]][c1[0]] = None
@@ -159,6 +160,7 @@ class game():
             self.ktoHra = "Black"
         else:
             self.ktoHra = "White"
+        self.g.statusupdate(self.ktoHra)
 
     def rosada(self, c1, c2, col):
         fromX = c1[0]
@@ -240,18 +242,31 @@ class game():
         return ret
     def klik(self,e):
         x,y = (e.x-50)//100,e.y//100
-        print(x,y,str(self.field[y][x]))
-        if self.coord1 is None:
-            if self.field[y][x] is not None:
-                print("Setting coord 1")
-                self.coord1 = (x,y)
-        elif self.coord1 is not None and self.coord2 is None:
-            self.coord2 = (x,y)
-            print("Setting coord 2")
-        if self.coord1 is not None and self.coord2 is not None:
-            print("Hybem z {} na {}... Vysledok je {}".format(self.coord1,self.coord2,
-                                                              self.g_pohni(self.coord1,self.coord2)))
-            self.coord1,self.coord2 = None,None
+        #print(x,y,str(self.field[y][x]))
+        if x in range(0,8) and y in range(0,8) and self.returning is None:
+            if self.coord1 is None:
+                if self.field[y][x] is not None:
+                    print("Setting coord 1")
+                    self.coord1 = (x,y)
+            elif self.coord1 is not None and self.coord2 is None:
+                self.coord2 = (x,y)
+                print("Setting coord 2")
+            if self.coord1 is not None and self.coord2 is not None:
+                #print("Hybem z {} na {}... Vysledok je {}".format(self.coord1,self.coord2))
+                print(self.g_pohni(self.coord1,self.coord2))
+                self.coord1,self.coord2 = None,None
+        elif x == 8 and self.returning is not None and y in range(self.g.taken('w')):
+            c = self.returning
+            p = self.g.ret(c,'White',y)
+            com = "temp = {}('White')".format(p)
+            exec(com)
+            self.field[c[0]][c[1]] = temp
+        elif x == 9 and self.returning is not None and y in range(self.g.taken('b')):
+            c = self.returning
+            p = self.g.ret(c,'Black',y)
+            com = "temp = {}('Black')".format(p)
+            exec(com)
+            self.field[c[0]][c[1]] = temp
 
 
 
