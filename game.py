@@ -1,7 +1,12 @@
 # -*- coding: utf-8 -*-
+import random
+import socket
+import time
 import sys
 import os
 from frame import *
+from net.NetClient import NetClient
+from net.NetServer import NetServer
 sys.path[0:0] = [os.path.join(sys.path[0], './pieces')]
 
 p = ["bishop","king","knight","pawn","queen","rook"]
@@ -11,12 +16,16 @@ for c in com:
 
 
 class game():
-    def __init__(self):
+    def __init__(self, network_game=False, i_am_server=False, address=None):
         self.field = [[None] * 8 for i in range(8)]
         self.set_up()
-        self.g = frame(self.preloz(),self.ktoHra)
         self.ktoHra = "White"
         self.returning = None
+
+        self.network_game = network_game
+        self.i_am_server = i_am_server
+        self.net = NetServer(self, localaddr=(address, 31425)) if (network_game and i_am_server) else NetClient(self, localaddr=(address, 31425)) if (network_game and not i_am_server) else None
+
         #sluzi na debug
 
         # pawn - pesiak
@@ -32,7 +41,19 @@ class game():
                       "Black bishop":"♝","Black queen":"♛","Black king":"♚",
                       "None":"　"} # pozor, toto nie je obycajna medzera
         self.coord1,self.coord2 = None,None
-        self.g.c.bind('<Button-1>',self.klik)
+
+        if network_game and i_am_server:
+            while self.net.client == None:
+                self.net.update()
+                time.sleep(0.01)
+
+        if network_game and not i_am_server:
+            while not self.net.game_started:
+                self.net.update()
+                time.sleep(0.01)
+        self.g = frame(self.preloz(),self.ktoHra, self.net.my_color if network_game else None)
+        self.g.c.bind('<Button-1>',self.klik_event)
+        self.g.c.after(100, self.poll)
         self.g.c.mainloop()
 
     def set_up(self):
@@ -160,7 +181,10 @@ class game():
             self.ktoHra = "Black"
         else:
             self.ktoHra = "White"
-        self.g.statusupdate(self.ktoHra)
+        if network_game:
+            self.g.netstatusupdate(self.ktoHra, self.net.my_color)
+        else:
+            self.g.statusupdate(self.ktoHra)
 
     def rosada(self, c1, c2, col):
         fromX = c1[0]
@@ -240,8 +264,17 @@ class game():
                 if self.field[i][j] is not None:
                     ret[i][j] = str(self.field[i][j])
         return ret
-    def klik(self,e):
-        x,y = (e.x-50)//100,e.y//100
+
+
+    def klik_event(self,e):
+        if self.network_game and self.ktoHra != self.net.my_color:
+            return
+        self.klik(e.x, e.y)
+        if self.network_game:
+            self.net.send_klik(e.x, e.y)
+
+    def klik(self, x, y):
+        x, y = (x-50)//100, y//100
         #print(x,y,str(self.field[y][x]))
         if x in range(0,8) and y in range(0,8) and self.returning is None:
             if self.coord1 is None:
@@ -271,13 +304,64 @@ class game():
             self.returning = None
 
 
+    def poll(self):
+        if not self.network_game:
+            return
+        self.net.update()
+        self.g.c.after(10, self.poll)
 
 
+if __name__ == '__main__':
+    network_game = None
+    i_am_server = None
+    ipaddr = None
 
+    while network_game == None:
+        print('Vyberte sposob hry:')
+        print('[1] Offline')
+        print('[2] Online - Zalozit server')
+        print('[3] Online - Pripojit sa na server')
+        inp = input().strip()
+        if inp in ['1', '[1]']:
+            network_game = False
+            i_am_server = False
+        elif inp in ['2', '[2]']:
+            network_game = True
+            i_am_server = True
+        elif inp in ['3', '[3]']:
+            network_game = True
+            i_am_server = False
+        else:
+            print('Taka moznost neexistuje.')
+            continue
 
+    if network_game:
+        if i_am_server:
+            s = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
+            for addr in ['8.8.8.8', '192.168.1.1', '172.16.1.1', '10.1.1.1']:
+                try:
+                    s.connect((addr, 80))
+                except:
+                    continue
+                ipaddr = s.getsockname()[0]
+                print('Toto je vasa IP adresa:', ipaddr)
+                break
+            if ipaddr == None:
+                print('Nepodarilo sa zistit vasu IP adresu.')
+        else:
+            while ipaddr == None:
+                print('Zadajte IP adresu serveru:')
+                inp = input().strip()
+                try:
+                    spl = list(map(int, inp.split('.')))
+                    if len(spl) != 4 or not all([spl[i] >= 0 and spl[i] <= 255 for i in range(len(spl))]):
+                        raise Exception()
+                    ipaddr = '.'.join(map(str, spl))
+                except:
+                    print('Zadana IP adresa ma zly tvar. Spravny tvar: [0-255].[0-255].[0-255].[0-255]')
+                    continue
 
-
-g = game()
+    g = game(network_game, i_am_server, ipaddr)
 
 
 

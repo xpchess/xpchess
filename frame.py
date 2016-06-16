@@ -16,17 +16,17 @@ icons = {"White pawn":"♙","White rook":"♖","White knight":"♘",
         "Black bishop":"♝","Black queen":"♛","Black king":"♚",
         "None":"　"}
 class frame:
-    def __init__(self,field,col):
+    def __init__(self,field,col,my_color):
         self.field = field
         self.ref = [[None] * 8 for i in range(8)]
         self.c = tkinter.Canvas(width=1050,height=950,background='white')
         self.c.pack()
-        self.plocha(col)
+        self.plocha(col, my_color)
         self.update(field)
         self.na_vyhodenie = None
         self.taken_white, self.taken_black = [], []
         
-    def plocha(self,col):
+    def plocha(self,col,my_color):
         self.c.create_rectangle(50,2,850,800,outline="black",fill="white")
         for i in range(8):
             self.c.create_text(25,50+i*100,text=8-i,font="arial 25 bold")
@@ -43,8 +43,10 @@ class frame:
         self.c.create_rectangle(950,2,1050,800)
         self.c.create_text(950,830,text="Vyhodené",font="arial 25 bold")
         self.c.create_text(950,870,text="Figúrky",font="arial 25 bold")
-        self.status = self.c.create_text(450,875,text="Na ťahu je {}".format(col),
-                                         font = "arial 30 bold")
+        if my_color == None:
+            self.status = self.c.create_text(450,875,text="Na ťahu je {}".format(col), font = "arial 30 bold")
+        else:
+            self.status = self.c.create_text(450,875,text="Ste na ťahu ({})".format(col) if my_color == col else "Na ťahu je oponent ({})".format(col), font = "arial 30 bold")
 
 
     def update(self,field):
@@ -87,6 +89,11 @@ class frame:
 
     def statusupdate(self,col):
         self.c.itemconfig(self.status,text="Na ťahu je {}".format(col))
+
+
+    def netstatusupdate(self,col,my_color):
+        self.c.itemconfig(self.status,text="Ste na ťahu ({})".format(col) if my_color == col else "Na ťahu je oponent ({})".format(col))
+
 
     def get_piece_name(self,p):
         for key in icons:
