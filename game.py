@@ -385,10 +385,14 @@ if __name__ == '__main__':
                 except:
                     continue
                 ipaddr = s.getsockname()[0]
-                print('Toto je vasa IP adresa:', ipaddr)
+                #print('Toto je vasa IP adresa:', ipaddr)
+                print('Zadajte vasu IP adresu:')
+                ipaddr = input()
                 break
             if ipaddr == None:
-                print('Nepodarilo sa zistit vasu IP adresu.')
+                print('Nepodarilo sa automaticky zistit vasu IP adresu.')
+                print('Zadajte vasu IP adresu:')
+                ipaddr = input()
         else:
             while ipaddr == None:
                 print('Zadajte IP adresu serveru:')
