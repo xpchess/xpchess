@@ -7,6 +7,7 @@ import os
 from frame import *
 from net.NetClient import NetClient
 from net.NetServer import NetServer
+from copy import deepcopy
 sys.path[0:0] = [os.path.join(sys.path[0], './pieces')]
 
 p = ["bishop","king","knight","pawn","queen","rook"]
@@ -102,7 +103,8 @@ class game():
 
 
     def g_pohni(self, c1, c2):
-        print(self.moj_kral())
+        print("Sach mat: ",self.sach_mat())
+        print("Sach:", self.som_sach(self.moj_kral()))
         c1,c2 = c1,c2
         fig1 = self.field[c1[1]][c1[0]]
         fig2 = self.field[c2[1]][c2[0]]
@@ -133,18 +135,20 @@ class game():
                     povodna1 = self.field[c2[1]][c2[0]]
                     povodna2 = self.field[c1[1]][c1[0]]
 
-                    self.hyb_sa(c1, c2)
                     if self.som_sach(self.moj_kral()):
                         self.field[c2[1]][c2[0]] = povodna1
                         self.field[c1[1]][c1[0]] = povodna2
                         return False
                     else:
+                        print("HYB 1")
+                        self.hyb_sa(c1, c2)
                         self.vymen_farbu_hraca()
                         return True
 
             elif str(fig1).split(' ')[1] == "pawn" and color1 != color2 and fig2 is not None:
                 if fig1.vyhadzujem(c1,c2,self.field):
                     self.hyb_sa(c1, c2)
+                    print("HYB 2")
                     self.vymen_farbu_hraca()
                     return True
                 else:
@@ -166,6 +170,41 @@ class game():
             else:
                 return False
         return False
+    
+    def sach_mat(self):
+        mojKral = self.moj_kral()
+
+        if not self.som_sach(mojKral):
+            return False
+        else:
+            zaloha = deepcopy(self.field)
+            navrat = True
+
+            for i in range(0, 8):
+                for j in range(0, 8):
+                    if self.field[i][j] is not None:
+                        if self.field[i][j].color == self.ktoHra:
+
+                            mojaFigurka = self.field[i][j]
+
+                            for x in range(0, 8):
+                                for y in range(0,8):
+                                    if mojaFigurka.pohyb((j,i), (y,x),self.field):
+                                        if not self.ktoHra in str(self.field[x][y]):
+                                            self.field[x][y] = mojaFigurka
+                                            self.field[i][j] = None
+
+                                            if "king" in str(mojaFigurka):
+                                                if not self.som_sach((y,x)):
+                                                    print("SACH MAT RET ",str(mojaFigurka),x,y,'\n')
+                                                    navrat = False
+                                            elif not self.som_sach(mojKral):
+                                                navrat = False
+
+                                            self.field = deepcopy(zaloha)
+
+
+            return navrat
 
     def hyb_sa(self, c1, c2):
         fig2 = self.field[c2[1]][c2[0]]
@@ -185,6 +224,8 @@ class game():
             self.g.netstatusupdate(self.ktoHra, self.net.my_color)
         else:
             self.g.statusupdate(self.ktoHra)
+        if self.sach_mat():
+            self.g.statusupdate(self.ktoHra,True)
 
     def rosada(self, c1, c2, col):
         fromX = c1[0]
@@ -276,7 +317,7 @@ class game():
     def klik(self, x, y):
         x, y = (x-50)//100, y//100
         #print(x,y,str(self.field[y][x]))
-        if x in range(0,8) and y in range(0,8) and self.returning is None:
+        if x in range(0,8) and y in range(0,8) and self.returning is None and not self.sach_mat():
             if self.coord1 is None:
                 if self.field[y][x] is not None:
                     print("Setting coord 1")
@@ -288,14 +329,14 @@ class game():
                 #print("Hybem z {} na {}... Vysledok je {}".format(self.coord1,self.coord2))
                 print(self.g_pohni(self.coord1,self.coord2))
                 self.coord1,self.coord2 = None,None
-        elif x == 8 and self.returning is not None and y in range(self.g.taken('w')):
+        elif x == 8 and self.returning is not None and y in range(self.g.taken('w')) and not self.sach_mat():
             c = self.returning
             p = self.g.ret(c,'White',y)
             com = "temp = {}('White')".format(p)
             exec(com)
             self.field[c[0]][c[1]] = temp
             self.returning = None
-        elif x == 9 and self.returning is not None and y in range(self.g.taken('b')):
+        elif x == 9 and self.returning is not None and y in range(self.g.taken('b')) and not self.sach_mat():
             c = self.returning
             p = self.g.ret(c,'Black',y)
             com = "temp = {}('Black')".format(p)

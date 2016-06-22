@@ -87,8 +87,11 @@ class frame:
         self.ref[fromY][fromX] = None
 
 
-    def statusupdate(self,col):
-        self.c.itemconfig(self.status,text="Na ťahu je {}".format(col))
+    def statusupdate(self,col,cm = False):
+        if cm:
+            self.c.itemconfig(self.status,text="{} Dostal ŠACH MAT".format(col))
+        else:
+            self.c.itemconfig(self.status,text="Na ťahu je {}".format(col))
 
 
     def netstatusupdate(self,col,my_color):

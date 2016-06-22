@@ -10,8 +10,8 @@ class bishop(piece):
 
         #pohyb po diagonale
 
-        print(fromX - toX)
-        print(fromY - toY)
+        #print(fromX - toX)
+        #print(fromY - toY)
 
         if abs(fromX - toX) == abs(fromY - toY):
             x_cor = list(range(toX, fromX, piece.vratKrok(toX, fromX)))
