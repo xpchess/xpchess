@@ -390,7 +390,7 @@ if __name__ == '__main__':
                 ipaddr = input()
                 break
             if ipaddr == None:
-                print('Nepodarilo sa automaticky zistit vasu IP adresu.')
+                #print('Nepodarilo sa automaticky zistit vasu IP adresu.')
                 print('Zadajte vasu IP adresu:')
                 ipaddr = input()
         else:
